@@ -97,3 +97,7 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# ignore some Django stuff
+lending_library/MEDIA/*
+!lending_library/MEDIA/.gitkeep
