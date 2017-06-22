@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.dispatch import receiver
+from books.models import Book
 import uuid
 
 
@@ -14,10 +15,11 @@ class ProfileManager(models.Manager):
 class PatronProfile(models.Model):
     """A profile for users to our application."""
 
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, related_name='profile')
     library_card_id = models.UUIDField(default=uuid.uuid4, editable=False)
     objects = models.Manager()
     active = ProfileManager()
+    borrowed = models.ManyToManyField(Book, related_name='borrowed_by')
 
     @property
     def is_active(self):

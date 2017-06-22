@@ -1,10 +1,14 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Home page</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 </head>
 <body>
-    <h1 style='color: red'>HELLO {{ food }} DAMMIT! You've got a {{ face }} face!</h1>
+    {% block content %}{% endblock %}
+
+    <h1>HELLO {{ food }} DAMMIT! You've got a {{ face }} face!</h1>
     <h2>Here is a word {{ some_word }} and a number {{ some_num }}</h2>
     <h2> Here are some numbers </h2>
     <ul>
@@ -13,5 +17,8 @@
     {% endfor %}
     </ul>
 
+
 </body>
+<footer>
+{% block option_js %}{% endblock %}</footer>
 </html>
