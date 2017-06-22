@@ -1,0 +1,17 @@
+{% extends "lending_library/home.html" %}
+{% load static %}
+
+{% block content %}
+<h2>This is the profile page.</h2>
+<ul>
+{% for book in books %}
+    <li>
+    <img src="{{ book.cover.url }}" />
+    </li>
+{% endfor %}
+</ul>
+{% endblock %}
+
+{% block option_js %}
+    <script type="text/javascript" src="{% static 'annoying.js' %}"></script>
+{% endblock %}
