@@ -32,3 +32,6 @@ class BookTests(TestCase):
 
     def test_some_route_lists_book_images(self):
         response = self.client.get(reverse('a_profile'))
+
+    def test_new_book_thing_stuff(self):
+        response = self.client.get(reverse('new-book'))
