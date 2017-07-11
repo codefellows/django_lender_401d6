@@ -20,10 +20,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'blerg')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(eval(os.environ.get('DEBUG', True)))
 
 ALLOWED_HOSTS = []
 
@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'patronprofile',
     'lending_library',
-    'books'
+    'books',
+    'storages'
 ]
 
 MIDDLEWARE = [
@@ -127,12 +128,32 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-    '/var/www/static/',
-]
+if DEBUG:
+    STATIC_URL = '/static/'
+    # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static'),
+        '/var/www/static/',
+    ]
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'MEDIA')
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'MEDIA')
+
+else:
+    AWS_STORAGE_BUCKET_NAME = 'sea-python-401d6'
+    AWS_ACCESS_KEY_ID = os.environ.get('IAM_USER_ACCESS_KEY_ID', '') #username
+    AWS_SECRET_ACCESS_KEY = os.environ.get('IAM_USER_SECRET_ACCESS_KEY', '') #password
+    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
+    STATICFILES_LOCATION = 'static'
+    STATICFILES_STORAGE = 'lending_library.custom_storages.StaticStorage'
+    STATIC_URL = 'https://{}/{}/'.format(
+        AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION
+    )
+    # https://sea-python-401d6.s3.amazonaws.com/static/
+
+    MEDIAFILES_LOCATION = 'media'
+    DEFAULT_FILE_STORAGE = 'lending_library.custom_storages.MediaStorage'
+    MEDIA_URL = 'https://{}/{}/'
+    # https://sea-python-401d6.s3.amazonaws.com/media/
+
